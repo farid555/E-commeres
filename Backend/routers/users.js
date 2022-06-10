@@ -10,22 +10,24 @@ router.get("/", async (req, res) => {
   res.send(productList);
 });
 
-router.post(`/`, (req, res) => {
-  const products = new User({
+router.post("/", async (req, res) => {
+  const user = new User({
     name: req.body.name,
-    age: req.body.age,
+    passwordHash: req.body.passwordHash,
+    email: req.body.email,
+    apartment: req.body.apartment,
+    phone: req.body.phone,
+    street: req.body.street,
+    zipCode: req.body.zipCode,
+    city: req.body.city,
+    country: req.body.country,
+    isAdmin: req.body.isAdmin,
   });
-  products
-    .save()
-    .then((createdProduct) => {
-      res.status(201).json(createdProduct);
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: err,
-        success: false,
-      });
-    });
+
+  await user.save();
+
+  if (!user) return res.status(400).json("The user was not created");
+  res.send(user);
 });
 
 module.exports = router;

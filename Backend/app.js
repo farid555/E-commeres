@@ -14,7 +14,7 @@ const api = process.env.API_URL;
 //middleware
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
+app.use(morgan("tiny"));
 
 //Routers
 app.use(`/${api}/products`, productsRouter);
