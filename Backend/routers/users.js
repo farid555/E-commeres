@@ -1,19 +1,28 @@
 const express = require("express");
 const router = express.Router();
 const { User } = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 router.get("/", async (req, res) => {
-  const productList = await User.find();
-  if (!productList) {
+  const userList = await User.find().select("-passwordHash");
+  if (!userList) {
     res.status(500).json({ success: flase });
   }
-  res.send(productList);
+  res.send(userList);
+});
+
+router.get("/:id", async (req, res) => {
+  const user = await User.findById(req.params.id).select("-passwordHash");
+  if (!user) {
+    res.status(500).json({ success: flase });
+  }
+  res.send(user);
 });
 
 router.post("/", async (req, res) => {
   const user = new User({
     name: req.body.name,
-    passwordHash: req.body.passwordHash,
+    passwordHash: bcrypt.hashSync(req.body.password, 10),
     email: req.body.email,
     apartment: req.body.apartment,
     phone: req.body.phone,
